@@ -1,17 +1,17 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 
-const getRandomAssignmentFromBucket = ( PeopleBucket, TaskBucket ) => {
+const getRandomAssignmentFromBucket = ( bucket1, bucket2 ) => {
 
-	const person = PeopleBucket.getRandomItem();
-	const task = TaskBucket.getRandomItem();
+	const item1 = bucket1.getRandomItem();
+	const item2 = bucket2.getRandomItem();
 
-	PeopleBucket.removeItem( person );
-	TaskBucket.removeItem( task );
+	bucket1.removeItem( item1 );
+	bucket2.removeItem( item2 );
 
 	return [
-		person,
-		task
+		item1,
+		item2
 	];
 };
 
