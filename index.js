@@ -28,7 +28,7 @@ board.on( 'ready', () => {
 
 		count++;
 
-		if ( 1 < count ) {
+		if ( count > 1 ) {
 			const [ person, task ] = getRandomAssignmentFromBucket( People, Tasks );
 
 			if ( task === undefined ) {
