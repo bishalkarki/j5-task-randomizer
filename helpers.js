@@ -1,5 +1,6 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
+const { listParticipants, listTasks, authorize } = require('./googleSheetsAPI');
 
 const getRandomAssignmentFromBucket = ( bucket1, bucket2 ) => {
 
@@ -16,17 +17,37 @@ const getRandomAssignmentFromBucket = ( bucket1, bucket2 ) => {
 };
 
 const getAllTasks = () => {
-	return fs.readFileSync(
-		path.join( __dirname, './data/tasks.txt' ),
-		'utf8'
-	).split("\n")
+	return fs.readFile(
+		path.join( __dirname,'./credentials.json'),
+		(err, content) => {
+			if (err) return console.log('Error loading client secret file:', err);
+			// Authorize a client with credentials, then call the Google Sheets API.
+			authorize(JSON.parse(content), listTasks);
+	});
+
+	// TODO: this is what we need to transform the data from google sheets.
+	// potentially simlar for below
+	var filtered_rows = rows.filter(row => {
+		if (row[1] !== "1") {
+		   return true;
+		}
+	 });
+	 
+	 var tasks = filtered_rows.map(row => {
+		if (row[1] !== "1"){
+		   return row[0]
+		}
+	 });
 };
 
 const getAllPeople = () => {
-	return fs.readFileSync(
-		path.join( __dirname, './data/people.txt' ),
-		'utf8'
-	).split("\n")
+	return fs.readFile(
+		path.join( __dirname,'./credentials.json'),
+		(err, content) => {
+			if (err) return console.log('Error loading client secret file:', err);
+			// Authorize a client with credentials, then call the Google Sheets API.
+			authorize(JSON.parse(content), listParticipants);
+		})
 };
 
 module.exports = {
@@ -34,3 +55,8 @@ module.exports = {
 	getAllTasks,
 	getAllPeople
 };
+
+
+// TODO: testing the calls - remove
+getAllPeople()
+getAllTasks()

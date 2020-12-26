@@ -9,20 +9,6 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 // time.
 const TOKEN_PATH = 'token.json';
 
-// Load client secrets from a local file.
-fs.readFile('credentials.json', (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
-  // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(JSON.parse(content), listParticipants);
-});
-
-// Load client secrets from a local file.
-fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
-    // Authorize a client with credentials, then call the Google Sheets API.
-    authorize(JSON.parse(content), listTasks);
-  });
-
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -85,6 +71,7 @@ function listParticipants(auth) {
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
     const rows = res.data.values;
+    
     if (rows.length) {
       console.log('Participants');
       // Print columns A and E, which correspond to indices 0 and 4.
@@ -97,26 +84,26 @@ function listParticipants(auth) {
   });
 }
 
-
 function listTasks(auth) {
     const sheets = google.sheets({version: 'v4', auth});
     sheets.spreadsheets.values.get({
       spreadsheetId: '1fC-wmNLAZGbPhZfKxw8_fMiu4qM3lvgZ8hEhrWNy6Nk',
       range: 'Tasks!A2:B100',
     }, (err, res) => {
+        
       if (err) return console.log('The API returned an error: ' + err);
+      
       const rows = res.data.values;
+      
       if (rows.length) {
-        console.log('Tasks, Completion Status, ');
-        // Print columns A and E, which correspond to indices 0 and 4.
-        console.log(rows)
-        rows.map((row) => {
-          console.log(`${row[0]}, ${row[1]}`);
-        });
+          // NOTE / TODO: This is not working b/c it is async, and we need it to be a promise.
+          // Same issue will happen for above listParticipants.
+          console.log('Tasks');
+          console.log(rows);
       } else {
         console.log('No data found.');
       }
     });
   }
 
-  module.exports = {listTasks, listParticipants}
+  module.exports = {listTasks, listParticipants, authorize}
