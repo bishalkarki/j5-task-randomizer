@@ -1,58 +1,50 @@
-var path = require('path')
-var fs = require("fs")
-var five = require("johnny-five");
-var Tessel = require("tessel-io");
+var five = require('johnny-five');
+var Tessel = require('tessel-io');
+const Bucket = require('./Bucket');
+
+var { getRandomAssignmentFromBucket, getAllPeople, getAllTasks } = require( './helpers' );
 
 var board = new five.Board({
-  io: new Tessel()
+	io: new Tessel()
 });
 
-var all_tasks = fs.readFileSync(
-    path.join( __dirname, './data/tasks.txt' ), 
-    'utf8'
-  ).split("\n")
+const People = new Bucket( getAllPeople(), true );
+const Tasks = new Bucket( getAllTasks() );
 
-var people = fs.readFileSync(
-    path.join( __dirname, './data/people.txt' ), 
-    'utf8'
-  ).split("\n")
+board.on( 'ready', () => {
 
-function getRandomFromBucket() {
-   var randomIndex = Math.floor(Math.random()*people.length);
-   var randomTaskIndex = Math.floor(Math.random()*all_tasks.length);
-   return [people.splice(randomIndex, 1)[0], all_tasks.splice(randomTaskIndex, 1)[0]];
-}
+	var lcd = new five.LCD({
+		pins: ['a2', 'a3', 'a4', 'a5', 'a6', 'a7']
+	});
 
-board.on("ready", () => {
-  var lcd = new five.LCD({
-    pins: ["a2", "a3", "a4", "a5", "a6", "a7"]
-  });
+	var button = new five.Button('b1');
 
-  var button = new five.Button("b1");
+	var count = 0;
 
-  var count = 0;
+	lcd.cursor(0, 0).print( 'Press button' );
+	lcd.cursor(1, 0).print( 'to get task' );
 
-  lcd.cursor(0, 0).print( 'Press button');
-  lcd.cursor(1, 0).print("to get task");
+	button.on( 'press', () => {
 
-  button.on("press", () => {
-      
-    count++;
-    
-    if ( 1 < count ) {
-      var result_call = getRandomFromBucket()
-  
-      lcd.cursor(0, 0).print( ' '.repeat(16));
-      lcd.cursor(1, 0).print( ' '.repeat(16));
-  
-      lcd.cursor(0, 0).print( result_call[0] + ':' );
-      lcd.cursor(1, 0).print( result_call[1] );
-    }
-    
-  });
+		count++;
 
-//   button.on("release", () => console.log('Button not pressed'));
-    
+		if ( count > 1 ) {
+			const [ person, task ] = getRandomAssignmentFromBucket( People, Tasks );
+
+			if ( task === undefined ) {
+				lcd.cursor(0, 0).print( 'No tasks left!  ' );
+				lcd.cursor(1, 0).print( 'Come back later.' );
+			} else {
+				lcd.cursor(0, 0).print( ' '.repeat(16) );
+				lcd.cursor(1, 0).print( ' '.repeat(16) );
+
+				lcd.cursor(0, 0).print( person + ':' );
+				lcd.cursor(1, 0).print( task );
+			}
+		}
+
+	});
+
 });
 
 
