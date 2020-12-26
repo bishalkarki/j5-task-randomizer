@@ -1,9 +1,9 @@
 module.exports = class Bucket {
 
-	constructor( initialItems ) {
+	constructor( initialItems, resetToDefaultWhenEmpty = false ) {
 		this.bucket = initialItems;
 		this.defaultItems = initialItems;
-		this.usedItems = [];
+		this.resetToDefaultWhenEmpty = resetToDefaultWhenEmpty;
 	}
 
 	addItem( item ) {
@@ -12,6 +12,7 @@ module.exports = class Bucket {
 
 	removeItem( itemToRemove ) {
 		this.bucket = this.bucket.filter( item => item !== itemToRemove );
+		this.maybeResetBucketWhenEmpty();
 	}
 
 	getRandomItem() {
@@ -20,11 +21,17 @@ module.exports = class Bucket {
 		return this.bucket[randomIndex];
 	}
 
+	getDefaultItems() {
+		return this.defaultItems;
+	}
+
 	getItems() {
 		return this.bucket;
 	}
 
-	resetBucket() {
-		this.bucket = this.defaultItems;
+	maybeResetBucketWhenEmpty() {
+		if ( this.resetToDefaultWhenEmpty === true && this.bucket.length === 0 ) {
+			this.bucket = this.defaultItems;
+		}
 	}
 };
