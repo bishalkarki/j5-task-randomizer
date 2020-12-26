@@ -1,0 +1,24 @@
+{
+  "name": "j5ik",
+  "version": "0.0.0",
+  "description": "Tessel project",
+  "main": "index.js",
+  "dependencies": {
+    "barcli": "^0.0.25",
+    "johnny-five": "^2.0.0",
+    "node-fetch": "^2.6.1",
+    "tessel-io": "^1.3.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": "www.github.com/tessel/t2-cli",
+  "keywords": [
+    "Tessel"
+  ],
+  "license": "MIT",
+  "readme": "A bare bones Tessel 2 blinky script.",
+  "devDependencies": {
+    "mocha": "^8.2.1"
+  }
+}
