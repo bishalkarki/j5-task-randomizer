@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "barcli": "^0.0.25",
+    "googleapis": "^39.2.0",
     "johnny-five": "^2.0.0",
     "node-fetch": "^2.6.1",
     "tessel-io": "^1.3.0"

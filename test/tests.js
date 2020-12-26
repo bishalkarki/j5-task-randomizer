@@ -1,14 +1,19 @@
 var assert = require('assert')
 
 describe("Task selection tests", () => {
-    it('Should select a task and assign it to a person',
-    () => {
+    it('Should select a task and assign it to a person', () => {
         var result = "some text"
         assert.equal(result.length, 2)
     })
 })
 
 
+describe("File save and update tests", () => {
+    it('Check file modified time is within the last 2 seconds', () => {
+        var result = "some text"
+        assert.equal(result.length, 2)
+    })
+})
 
 // final output should be an array with 2 strings
 
@@ -21,3 +26,7 @@ describe("Task selection tests", () => {
 // when there are no people remaining, everyone is re-added to the random selection pool
 // when there are no tasks remaining, return "out of tasks"
 // if a file is empty
+
+function displayDate() {
+    document.getElementById("demo").innerHTML = Date();
+  }
