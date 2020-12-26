@@ -8,7 +8,7 @@ var board = new five.Board({
 	io: new Tessel()
 });
 
-const People = new Bucket( getAllPeople() );
+const People = new Bucket( getAllPeople(), true );
 const Tasks = new Bucket( getAllTasks() );
 
 board.on( 'ready', () => {
@@ -29,16 +29,18 @@ board.on( 'ready', () => {
 		count++;
 
 		if ( 1 < count ) {
-			const result_call = getRandomAssignmentFromBucket( People, Tasks );
+			const [ person, task ] = getRandomAssignmentFromBucket( People, Tasks );
 
-			const person = result_call[0];
-			const task = result_call[1];
+			if ( task === undefined ) {
+				lcd.cursor(0, 0).print( 'No tasks left!  ' );
+				lcd.cursor(1, 0).print( 'Come back later.' );
+			} else {
+				lcd.cursor(0, 0).print( ' '.repeat(16) );
+				lcd.cursor(1, 0).print( ' '.repeat(16) );
 
-			lcd.cursor(0, 0).print( ' '.repeat(16));
-			lcd.cursor(1, 0).print( ' '.repeat(16));
-
-			lcd.cursor(0, 0).print( person + ':' );
-			lcd.cursor(1, 0).print( task );
+				lcd.cursor(0, 0).print( person + ':' );
+				lcd.cursor(1, 0).print( task );
+			}
 		}
 
 	});
