@@ -1,12 +1,18 @@
-var assert = require('assert')
+process.env.NODE_ENV = 'test'
 
-describe("Task selection tests", () => {
-    it('Should select a task and assign it to a person',
-    () => {
-        var result = "some text"
-        assert.equal(result.length, 2)
-    })
-})
+var assert = require('assert')
+var { getRandomFromBucket } = require( '../helpers' );
+
+describe( 'Task selection tests', () => {
+
+	it('Should return a task and a person', () => {
+		var result = getRandomFromBucket();
+
+		assert.strictEqual( Array.isArray( result ), true );
+		assert.strictEqual( result.length, 2 );
+	});
+
+});
 
 
 
